@@ -80,6 +80,7 @@ export interface IProblem {
     passRate: string;
     companies: string[];
     tags: string[];
+    category: string;
 }
 
 export const defaultProblem: IProblem = {
@@ -92,6 +93,7 @@ export const defaultProblem: IProblem = {
     passRate: "",
     companies: [] as string[],
     tags: [] as string[],
+    category: "",
 };
 
 export enum Category {
@@ -100,6 +102,15 @@ export enum Category {
     Tag = "Tag",
     Company = "Company",
     Favorite = "Favorite",
+}
+
+export enum ProblemCategory {
+    ALGORITHMS = "algorithms",
+    DATABASE = "database",
+    SHELL = "shell",
+    CONCURRENCY = "concurrency",
+    LCCI = "lcci",
+    LCOF = "lcof",
 }
 
 export const supportedPlugins: string[] = [

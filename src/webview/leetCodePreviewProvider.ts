@@ -130,8 +130,8 @@ class LeetCodePreviewProvider extends LeetCodeWebview {
 
     protected onDidDisposeWebview(): void {
         super.onDidDisposeWebview();
-        delete this.node;
-        delete this.description;
+        // delete this.node;
+        // delete this.description;
         this.sideMode = false;
     }
 

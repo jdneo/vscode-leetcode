@@ -15,6 +15,10 @@ export class LeetCodeNode {
         return this.data.name;
     }
 
+    public get category(): string {
+        return this.data.category;
+    }
+
     public get state(): ProblemState {
         return this.data.state;
     }

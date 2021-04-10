@@ -83,7 +83,7 @@ class LeetCodeManager extends EventEmitter {
                         env: createEnvOption(),
                     });
 
-                childProc.stdout.on("data", async (data: string | Buffer) => {
+                childProc.stdout?.on("data", async (data: string | Buffer) => {
                     data = data.toString();
                     leetCodeChannel.append(data);
                     if (data.includes("twoFactorCode")) {
@@ -96,19 +96,19 @@ class LeetCodeManager extends EventEmitter {
                             childProc.kill();
                             return resolve(undefined);
                         }
-                        childProc.stdin.write(`${twoFactor}\n`);
+                        childProc.stdin?.write(`${twoFactor}\n`);
                     }
                     const successMatch: RegExpMatchArray | null = data.match(this.successRegex);
                     if (successMatch && successMatch[1]) {
-                        childProc.stdin.end();
+                        childProc.stdin?.end();
                         return resolve(successMatch[1]);
                     } else if (data.match(this.failRegex)) {
-                        childProc.stdin.end();
+                        childProc.stdin?.end();
                         return reject(new Error("Faile to login"));
                     }
                 });
 
-                childProc.stderr.on("data", (data: string | Buffer) => leetCodeChannel.append(data.toString()));
+                childProc.stderr?.on("data", (data: string | Buffer) => leetCodeChannel.append(data.toString()));
 
                 childProc.on("error", reject);
                 const name: string | undefined = await vscode.window.showInputBox({
@@ -120,7 +120,7 @@ class LeetCodeManager extends EventEmitter {
                     childProc.kill();
                     return resolve(undefined);
                 }
-                childProc.stdin.write(`${name}\n`);
+                childProc.stdin?.write(`${name}\n`);
                 const pwd: string | undefined = await vscode.window.showInputBox({
                     prompt: isByCookie ? "Enter cookie" : "Enter password.",
                     password: true,
@@ -131,7 +131,7 @@ class LeetCodeManager extends EventEmitter {
                     childProc.kill();
                     return resolve(undefined);
                 }
-                childProc.stdin.write(`${pwd}\n`);
+                childProc.stdin?.write(`${pwd}\n`);
             });
             if (userName) {
                 vscode.window.showInformationMessage(`Successfully ${inMessage}.`);

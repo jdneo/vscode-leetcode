@@ -20,7 +20,7 @@ class LeetCodeExecutor implements Disposable {
     private configurationChangeListener: Disposable;
 
     constructor() {
-        this.leetCodeRootPath = path.join(__dirname, "..", "..", "node_modules", "vsc-leetcode-cli");
+        this.leetCodeRootPath = path.join(__dirname, "..", "..", "node_modules", "@baoxi/vsc-leetcode-cli");
         this.nodeExecutable = this.getNodePath();
         this.configurationChangeListener = workspace.onDidChangeConfiguration((event: ConfigurationChangeEvent) => {
             if (event.affectsConfiguration("leetcode.nodePath")) {
@@ -88,10 +88,10 @@ class LeetCodeExecutor implements Disposable {
         return await this.executeCommandEx(this.nodeExecutable, [await this.getLeetCodeBinaryPath(), "user", "-L"]);
     }
 
-    public async listProblems(showLocked: boolean): Promise<string> {
+    public async listProblems(showLocked: boolean, category: string): Promise<string> {
         return await this.executeCommandEx(this.nodeExecutable, showLocked ?
-            [await this.getLeetCodeBinaryPath(), "list"] :
-            [await this.getLeetCodeBinaryPath(), "list", "-q", "L"],
+            [await this.getLeetCodeBinaryPath(), "list", "-c", category] :
+            [await this.getLeetCodeBinaryPath(), "list", "-c", category, "-q", "L"],
         );
     }
 
@@ -100,7 +100,7 @@ class LeetCodeExecutor implements Disposable {
 
         if (!await fse.pathExists(filePath)) {
             await fse.createFile(filePath);
-            const codeTemplate: string = await this.executeCommandWithProgressEx("Fetching problem data...", this.nodeExecutable, [await this.getLeetCodeBinaryPath(), "show", problemNode.id, templateType, "-l", language]);
+            const codeTemplate: string = await this.executeCommandWithProgressEx("Fetching problem data...", this.nodeExecutable, [await this.getLeetCodeBinaryPath(), "show", `"${problemNode.id}"`, templateType, "-l", language]);
             await fse.writeFile(filePath, codeTemplate);
         }
     }
@@ -111,7 +111,7 @@ class LeetCodeExecutor implements Disposable {
     }
 
     public async getDescription(problemNodeId: string): Promise<string> {
-        return await this.executeCommandWithProgressEx("Fetching problem description...", this.nodeExecutable, [await this.getLeetCodeBinaryPath(), "show", problemNodeId, "-x"]);
+        return await this.executeCommandWithProgressEx("Fetching problem description...", this.nodeExecutable, [await this.getLeetCodeBinaryPath(), "show", `"${problemNodeId}"`, "-x"]);
     }
 
     public async listSessions(): Promise<string> {

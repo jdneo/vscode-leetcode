@@ -165,7 +165,6 @@ async function showProblemInternal(node: IProblem): Promise<void> {
         }
 
         finalPath = wsl.useWsl() ? await wsl.toWinPath(finalPath) : finalPath;
-
         const descriptionConfig: IDescriptionConfiguration = settingUtils.getDescriptionConfiguration();
         await leetCodeExecutor.showProblem(node, language, finalPath, descriptionConfig.showInComment);
         const promises: any[] = [
