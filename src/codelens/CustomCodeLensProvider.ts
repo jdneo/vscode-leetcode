@@ -56,10 +56,32 @@ export class CustomCodeLensProvider implements vscode.CodeLensProvider {
         }
 
         if (shortcuts.indexOf("test") >= 0) {
+            let testLineStart: number = -1;
+            for (let i: number = document.lineCount - 1; i >= 0; i--) {
+                const lineContent: string = document.lineAt(i).text;
+                if (lineContent.indexOf("@lc test=start") >= 0) {
+                    testLineStart = i;
+                    break;
+                }
+            }
+            let testLineEnd: number = -1;
+            if (testLineStart >= 0) {
+                for (let i: number = document.lineCount - 1; i >= 0; i--) {
+                    const lineContent: string = document.lineAt(i).text;
+                    if (lineContent.indexOf("@lc test=end") >= 0) {
+                        testLineEnd = i;
+                        break;
+                    }
+                }
+            }
+            const testStringInSource: string | null = testLineEnd >= 0
+                ? document.getText(new vscode.Range(testLineStart + 1, 0, testLineEnd, 0))
+                : null;
+
             codeLens.push(new vscode.CodeLens(range, {
                 title: "Test",
                 command: "leetcode.testSolution",
-                arguments: [document.uri],
+                arguments: [document.uri, testStringInSource],
             }));
         }
 

@@ -12,7 +12,7 @@ import { getActiveFilePath } from "../utils/workspaceUtils";
 import * as wsl from "../utils/wslUtils";
 import { leetCodeSubmissionProvider } from "../webview/leetCodeSubmissionProvider";
 
-export async function testSolution(uri?: vscode.Uri): Promise<void> {
+export async function testSolution(uri?: vscode.Uri, testContentInSource?: string): Promise<void> {
     try {
         if (leetCodeManager.getStatus() === UserStatus.SignedOut) {
             return;
@@ -29,6 +29,12 @@ export async function testSolution(uri?: vscode.Uri): Promise<void> {
                 description: "",
                 detail: "Test with the default cases",
                 value: ":default",
+            },
+            {
+                label: "$(code) From source",
+                description: "",
+                detail: "Test with the cases in source code",
+                value: ":source",
             },
             {
                 label: "$(pencil) Write directly...",
@@ -73,6 +79,13 @@ export async function testSolution(uri?: vscode.Uri): Promise<void> {
                     } else {
                         vscode.window.showErrorMessage("The selected test file must not be empty.");
                     }
+                }
+                break;
+            case ":source":
+                if (testContentInSource) {
+                    result = await leetCodeExecutor.testSolution(filePath, parseTestString(testContentInSource.replace(/\r?\n/g, "\\n")));
+                } else {
+                    vscode.window.showErrorMessage("Failed to load test cases from source code.");
                 }
                 break;
             default:
