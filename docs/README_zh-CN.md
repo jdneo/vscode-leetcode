@@ -50,7 +50,7 @@
 
 - 点击 `LeetCode Explorer` 中的 `Sign in to LeetCode` 即可登入。
 
-- 你也可以使用下来命令登入或利用cookie登入或登出:
+- 你也可以使用下列快捷键(`Ctrl+shift+p`)命令登入或利用cookie登入或登出:
   - **LeetCode: Sign in**
   - **LeetCode: Sign out**
 ---
