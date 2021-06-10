@@ -17,11 +17,13 @@ import { toWslPath, useWsl } from "./utils/wslUtils";
 class LeetCodeExecutor implements Disposable {
     private leetCodeRootPath: string;
     private nodeExecutable: string;
+    private lastTest: string | undefined;
     private configurationChangeListener: Disposable;
 
     constructor() {
         this.leetCodeRootPath = path.join(__dirname, "..", "..", "node_modules", "vsc-leetcode-cli");
         this.nodeExecutable = this.getNodePath();
+        this.lastTest = "";
         this.configurationChangeListener = workspace.onDidChangeConfiguration((event: ConfigurationChangeEvent) => {
             if (event.affectsConfiguration("leetcode.nodePath")) {
                 this.nodeExecutable = this.getNodePath();
@@ -174,6 +176,7 @@ class LeetCodeExecutor implements Disposable {
     }
 
     public async testSolution(filePath: string, testString?: string): Promise<string> {
+        this.lastTest = testString;
         if (testString) {
             return await this.executeCommandWithProgressEx("Submitting to LeetCode...", this.nodeExecutable, [await this.getLeetCodeBinaryPath(), "test", `"${filePath}"`, "-t", `${testString}`]);
         }
@@ -211,6 +214,10 @@ class LeetCodeExecutor implements Disposable {
 
     public get node(): string {
         return this.nodeExecutable;
+    }
+
+    public get lastTestString(): string | undefined {
+        return this.lastTest;
     }
 
     public dispose(): void {

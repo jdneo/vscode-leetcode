@@ -42,6 +42,12 @@ export async function testSolution(uri?: vscode.Uri): Promise<void> {
                 detail: "Test with the written cases in file",
                 value: ":file",
             },
+            {
+                label: "$(debug-restart) Re-run last...",
+                description: "",
+                detail: "Test with the cases which were last run",
+                value: ":rerun",
+            },
         );
         const choice: IQuickItemEx<string> | undefined = await vscode.window.showQuickPick(picks);
         if (!choice) {
@@ -73,6 +79,13 @@ export async function testSolution(uri?: vscode.Uri): Promise<void> {
                     } else {
                         vscode.window.showErrorMessage("The selected test file must not be empty.");
                     }
+                }
+                break;
+            case ":rerun":
+                if (leetCodeExecutor.lastTestString) {
+                    result = await leetCodeExecutor.testSolution(filePath, leetCodeExecutor.lastTestString);
+                } else { // run default cases
+                    result = await leetCodeExecutor.testSolution(filePath);
                 }
                 break;
             default:
